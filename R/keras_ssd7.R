@@ -102,11 +102,12 @@ build_model <- function(image_size,
   
   # Design the actual network
   x = layer_input(shape = c(img_height, img_width, img_channels))
-  normed = layer_lambda(x, function(z) z/127.5 - 1., # Convert input feature range to [-1,1]
-                        output_shape = c(img_height, img_width, img_channels),
-                        name = 'lambda1')
+  # normed = layer_lambda(x, function(z) z/127.5 - 1., # Convert input feature range to [-1,1]
+  #                       output_shape = c(img_height, img_width, img_channels),
+  #                       name = 'lambda1')
+  # conv1 = layer_conv_2d(normed, 32, c(5, 5), name ='conv1', strides = c(1, 1), padding= "same")
   
-  conv1 = layer_conv_2d(normed, 32, c(5, 5), name ='conv1', strides = c(1, 1), padding= "same")
+  conv1 = layer_conv_2d(x, 32, c(5, 5), name ='conv1', strides = c(1, 1), padding= "same")
   conv1 = layer_batch_normalization(conv1, axis=3, momentum =0.99, name = 'bn1')# Tensorflow uses filter format [filter_height, filter_width, in_channels, out_channels], hence axis = 3
   conv1 = layer_activation_elu(conv1, name = 'elu1')
   pool1 = layer_max_pooling_2d(conv1, pool_size = c(2, 2), name='pool1')
